@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surface_page">#131A15</color>
+    <color name="surface_card">#1D2620</color>
+    <color name="surface_input">#232D26</color>
+    <color name="surface_tint">#23382A</color>
+    <color name="surface_warn">#3A3220</color>
+    <color name="text_primary">#EDF2EE</color>
+    <color name="text_secondary">#B3BEB6</color>
+    <color name="text_accent">#81C784</color>
+    <color name="text_accent_admin">#B0BEC5</color>
+    <color name="stroke_soft">#39453D</color>
+
+    <color name="cat_fruit">#46303A</color>
+    <color name="cat_vegetable">#2A3D2D</color>
+    <color name="cat_dairy">#2A3744</color>
+    <color name="cat_egg">#40371F</color>
+    <color name="cat_flower">#3D2F42</color>
+    <color name="cat_processed">#3A322E</color>
+    <color name="map_land">#26352A</color>
+    <color name="map_road">#4B5A50</color>
+</resources>

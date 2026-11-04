@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta definida en el documento tecnico (seccion Mockups por Rol de Usuario) -->
+    <color name="agro_green">#2E7D32</color>
+    <color name="agro_green_dark">#1B5E20</color>
+    <color name="agro_green_soft">#E8F5E9</color>
+    <color name="agro_amber">#F9A825</color>
+    <color name="agro_amber_soft">#FFF8E1</color>
+    <color name="agro_slate">#37474F</color>
+    <color name="agro_slate_dark">#263238</color>
+    <color name="agro_slate_soft">#ECEFF1</color>
+
+    <!-- Tokens semanticos que cambian entre tema claro y oscuro -->
+    <color name="surface_page">#FAFAF7</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="surface_input">#FFFFFF</color>
+    <color name="surface_tint">#E8F5E9</color>
+    <color name="surface_warn">#FFF8E1</color>
+    <color name="text_primary">#1E2A22</color>
+    <color name="text_secondary">#55615A</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_amber">#1E2A22</color>
+    <color name="text_accent">#2E7D32</color>
+    <color name="text_accent_admin">#37474F</color>
+    <color name="stroke_soft">#D7DDD8</color>
+
+    <!-- Estados -->
+    <color name="state_ok">#2E7D32</color>
+    <color name="state_warn">#F9A825</color>
+    <color name="state_info">#1565C0</color>
+    <color name="state_error">#C62828</color>
+    <color name="state_muted">#5F6B64</color>
+
+    <!-- Fondos de ilustracion por categoria -->
+    <color name="cat_fruit">#FCE4EC</color>
+    <color name="cat_vegetable">#E8F5E9</color>
+    <color name="cat_dairy">#E3F2FD</color>
+    <color name="cat_egg">#FFF8E1</color>
+    <color name="cat_flower">#F3E5F5</color>
+    <color name="cat_processed">#EFEBE9</color>
+    <color name="map_land">#E4EFE0</color>
+    <color name="map_road">#FFFFFF</color>
+</resources>

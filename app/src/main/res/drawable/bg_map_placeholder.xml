@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mapa ilustrativo: lo reemplaza el Maps SDK cuando se integre el backend. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/map_land" />
+            <corners android:radius="@dimen/radius_input" />
+        </shape>
+    </item>
+    <item android:bottom="62dp" android:top="62dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/map_road" />
+            <size android:height="10dp" />
+        </shape>
+    </item>
+    <item android:bottom="22dp" android:top="112dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/map_road" />
+            <size android:height="6dp" />
+        </shape>
+    </item>
+    <item android:gravity="center_horizontal|fill_vertical" android:width="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/map_road" />
+        </shape>
+    </item>
+</layer-list>

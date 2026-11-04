@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Logo AgroSabana: circulo verde con hoja ambar, igual a los mockups. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+    <path android:fillColor="@color/agro_green"
+        android:pathData="M24,2a22,22 0,1 0,0 44,22 22,0 0,0 0,-44z" />
+    <path android:fillColor="@color/agro_amber"
+        android:pathData="M31,10C21,12 15,20 17,31c0.4,2.2 1.2,4.2 2.4,6 7.6,-2 13.6,-8.6 13.6,-18 0,-3.2 -0.7,-6.2 -2,-9z" />
+    <path android:strokeColor="@color/agro_green_dark" android:strokeWidth="1.4"
+        android:strokeLineCap="round" android:pathData="M19.4,37C21,28 25,20 30.4,12.5" />
+</vector>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.AgroSabana" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/agro_green</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorPrimaryContainer">@color/surface_tint</item>
+        <item name="colorOnPrimaryContainer">@color/text_primary</item>
+        <item name="colorSecondary">@color/agro_amber</item>
+        <item name="colorOnSecondary">@color/text_on_amber</item>
+        <item name="colorSecondaryContainer">@color/surface_tint</item>
+        <item name="colorOnSecondaryContainer">@color/text_primary</item>
+        <item name="colorTertiary">@color/agro_slate</item>
+        <item name="colorError">@color/state_error</item>
+        <item name="android:colorBackground">@color/surface_page</item>
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/stroke_soft</item>
+        <item name="colorSurfaceVariant">@color/surface_tint</item>
+        <item name="colorSurfaceContainer">@color/surface_card</item>
+        <item name="colorSurfaceContainerLow">@color/surface_card</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_card</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_tint</item>
+        <item name="android:statusBarColor">@color/agro_green_dark</item>
+        <item name="android:navigationBarColor">@color/surface_card</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35" xmlns:tools="http://schemas.android.com/tools">true</item>
+        <item name="agroAccentText">@color/text_accent</item>
+        <item name="toolbarStyle">@style/Widget.AgroSabana.Toolbar</item>
+        <item name="materialButtonStyle">@style/Widget.AgroSabana.Button</item>
+        <item name="textInputStyle">@style/Widget.AgroSabana.TextInput</item>
+        <item name="materialCardViewStyle">@style/Widget.AgroSabana.Card</item>
+        <item name="bottomNavigationStyle">@style/Widget.AgroSabana.BottomNav</item>
+        <item name="chipStyle">@style/Widget.AgroSabana.Chip</item>
+        <item name="tabStyle">@style/Widget.AgroSabana.Tabs</item>
+    </style>
+
+    <style name="Theme.AgroSabana" parent="Base.Theme.AgroSabana" />
+
+    <!-- El gris azulado del Administrador deja claro que se opera con privilegios elevados. -->
+    <style name="Theme.AgroSabana.Admin" parent="Base.Theme.AgroSabana">
+        <item name="colorPrimary">@color/agro_slate</item>
+        <item name="agroAccentText">@color/text_accent_admin</item>
+        <item name="android:statusBarColor">@color/agro_slate_dark</item>
+        <item name="toolbarStyle">@style/Widget.AgroSabana.Toolbar.Admin</item>
+    </style>
+
+    <!-- Splash API (RF-INI-01) -->
+    <style name="Theme.AgroSabana.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/surface_page</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo_splash</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+        <item name="postSplashScreenTheme">@style/Theme.AgroSabana</item>
+    </style>
+</resources>

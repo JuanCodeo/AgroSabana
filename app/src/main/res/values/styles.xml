@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Barras -->
+    <style name="Widget.AgroSabana.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/agro_green</item>
+        <item name="titleTextColor">@color/text_on_primary</item>
+        <item name="subtitleTextColor">@color/text_on_primary</item>
+        <item name="navigationIconTint">@color/text_on_primary</item>
+        <item name="titleTextAppearance">@style/TextAppearance.AgroSabana.ToolbarTitle</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Toolbar.Admin">
+        <item name="android:background">@color/agro_slate</item>
+    </style>
+
+    <style name="Widget.AgroSabana.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/surface_card</item>
+        <item name="itemIconTint">@color/nav_item_tint</item>
+        <item name="itemTextColor">@color/nav_item_tint</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.AgroSabana.NavIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="Widget.AgroSabana.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/surface_tint</item>
+    </style>
+
+    <!-- Botones -->
+    <style name="Widget.AgroSabana.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/touch_min</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Button.Accent">
+        <item name="backgroundTint">@color/agro_amber</item>
+        <item name="android:textColor">@color/text_on_amber</item>
+        <item name="iconTint">@color/text_on_amber</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/touch_min</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="strokeColor">@color/stroke_soft</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Button.Danger" parent="Widget.AgroSabana.Button.Outlined">
+        <item name="android:textColor">@color/state_error</item>
+        <item name="strokeColor">@color/state_error</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">@dimen/touch_min</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/text_accent</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Button.TextDanger" parent="Widget.AgroSabana.Button.Text">
+        <item name="android:textColor">@color/state_error</item>
+    </style>
+
+    <!-- Formularios y contenedores -->
+    <style name="Widget.AgroSabana.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_input</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_input</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_input</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_input</item>
+        <item name="boxBackgroundColor">@color/surface_input</item>
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/agro_green</item>
+        <item name="hintTextColor">@color/text_accent</item>
+    </style>
+
+    <style name="Widget.AgroSabana.TextInput.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_input</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_input</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_input</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_input</item>
+        <item name="boxBackgroundColor">@color/surface_input</item>
+        <item name="boxStrokeColor">@color/agro_green</item>
+        <item name="hintTextColor">@color/text_accent</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">@dimen/radius_card</item>
+        <item name="strokeColor">@color/stroke_soft</item>
+        <item name="strokeWidth">@dimen/stroke_card</item>
+        <item name="cardBackgroundColor">@color/surface_card</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="chipStrokeColor">@color/stroke_soft</item>
+        <item name="android:textColor">@color/chip_text</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipCornerRadius">@dimen/radius_button</item>
+    </style>
+
+    <style name="Widget.AgroSabana.Tabs" parent="Widget.Material3.TabLayout">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="tabTextColor">@color/text_secondary</item>
+        <item name="tabSelectedTextColor">?attr/agroAccentText</item>
+        <item name="tabIndicatorColor">?attr/agroAccentText</item>
+        <item name="tabRippleColor">@color/surface_tint</item>
+    </style>
+
+    <!-- Tipografia -->
+    <style name="TextAppearance.AgroSabana.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_title</item>
+    </style>
+
+    <style name="Text.Display" parent="">
+        <item name="android:textColor">@color/text_accent</item>
+        <item name="android:textSize">@dimen/text_display</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Title" parent="">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Subtitle" parent="">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_subtitle</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Body" parent="">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="Text.Caption" parent="">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_caption</item>
+    </style>
+
+    <style name="Text.Price" parent="Text.Subtitle">
+        <item name="android:textColor">@color/text_accent</item>
+    </style>
+
+    <style name="Text.Badge" parent="">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">@dimen/space_s</item>
+        <item name="android:paddingEnd">@dimen/space_s</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:background">@drawable/bg_badge</item>
+        <item name="android:textColor">@color/text_on_primary</item>
+    </style>
+
+    <!-- Contenedor de pantalla con margenes uniformes -->
+    <style name="Layout.Page" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/space_l</item>
+    </style>
+</resources>
