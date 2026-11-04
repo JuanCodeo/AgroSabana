@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Anexo: actualización del documento técnico de AgroSabana</title>
+<style>
+  @page { size: letter; margin: 2.54cm; }
+  body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.4; color: #000; }
+  h1 { font-size: 14pt; text-align: center; margin: 0 0 4pt; }
+  h2 { font-size: 12pt; text-align: center; margin: 18pt 0 6pt; }
+  .meta { text-align: center; margin-bottom: 18pt; }
+  p { margin: 0 0 8pt; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 12pt; font-size: 10pt; line-height: 1.25; page-break-inside: auto; }
+  th { border-top: 1pt solid #000; border-bottom: 1pt solid #000; text-align: left; padding: 3pt 5pt; }
+  td { padding: 3pt 5pt; vertical-align: top; }
+  tr { page-break-inside: avoid; }
+  table tr:last-child td { border-bottom: 1pt solid #000; }
+  .cap { font-weight: bold; margin: 10pt 0 0; page-break-after: avoid; }
+  .sub { font-style: italic; margin: 0; page-break-after: avoid; }
+</style>
+</head>
+<body>
+<h1>Anexo: actualización del documento técnico de AgroSabana</h1>
+<div class="meta">Juan José Guerrero Acosta<br>Ingeniería de Software, Fundación Universitaria Compensar<br>Desarrollo de Aplicaciones Móviles<br>3 de noviembre de 2026</div>
+
+<p>Este anexo complementa el documento <em>AgroSabana: Documento Técnico de Planeación</em> (13 de octubre de 2026). Registra los cambios necesarios para que la planeación coincida con el frontend implementado. Los requerimientos que no aparecen aquí se mantienen como fueron definidos.</p>
+
+<h2>Cambios de diseño</h2>
+<p class="cap">Tabla A1</p><p class="sub">Decisiones del documento que cambian con la implementación</p>
+<table>
+<tr><th style="width:24%">Referencia</th><th style="width:38%">Decía</th><th>Queda</th></tr>
+<tr><td>RNF-USA-01 y pila tecnológica</td><td>Jetpack Compose y Navigation Compose con grafos por rol.</td><td>Vistas XML con Material Design 3, Activities y Fragments, porque la actividad evalúa layouts, drawables, estilos y values. Se conservan tema claro y oscuro.</td></tr>
+<tr><td>RNF-REN-02</td><td>LazyColumn, Paging 3 y Coil.</td><td>RecyclerView con ViewBinding. La paginación y la caché de imágenes se implementan con el backend.</td></tr>
+<tr><td>RNF-ESC-01 y Figura 1</td><td>Multi-módulo <em>feature:*</em> y <em>core:*</em>.</td><td>Un módulo <code>:app</code> organizado por paquetes (<code>ui/auth</code>, <code>ui/buyer</code>, <code>ui/seller</code>, <code>ui/admin</code>, <code>ui/common</code>, <code>data</code>). La separación en módulos se aplaza a la etapa de backend.</td></tr>
+<tr><td>RNF-ESC-04, inyección y MVVM</td><td>Hilt y ViewModels.</td><td>Sin Hilt ni ViewModels en esta etapa: las pantallas consumen directamente la fuente de datos en memoria <code>Store</code>.</td></tr>
+<tr><td>Figura 2 y mockup 24</td><td>Pestaña «Compras» del administrador.</td><td>Pestaña «Ventas»: reporte con indicadores, gráfica, vendedores destacados, supervisión de compras y exportación.</td></tr>
+<tr><td>Navegación</td><td>Solo barra inferior.</td><td>Bottom Navigation y Drawer en los tres roles.</td></tr>
+<tr><td>RF-AUT-05</td><td>Sin mockup.</td><td>Se agrega la pantalla de recuperación de contraseña.</td></tr>
+<tr><td>Comprador, destino «Buscar»</td><td>Búsqueda.</td><td>Se nombra «Catálogo»; reúne búsqueda y filtros por categoría, cercanía y precio.</td></tr>
+</table>
+
+<h2>Alcance implementado en esta entrega</h2>
+<p>La entrega corresponde al frontend. Los comportamientos que dependen de servidor o de servicios externos se presentan con datos locales, como resume la Tabla A2.</p>
+<p class="cap">Tabla A2</p><p class="sub">Funciones simuladas o pendientes para la etapa de backend</p>
+<table>
+<tr><th style="width:28%">Requerimiento</th><th style="width:37%">Estado actual</th><th>Pendiente</th></tr>
+<tr><td>RF-INI-01, RF-AUT-01 a 03, RNF-SEG-03</td><td>Sesión local y cuentas de prueba. El rol se lee de los datos locales. El botón de Google solo informa que se conecta con el backend.</td><td>Firebase Authentication, OAuth 2.0 y rol en <em>custom claims</em>.</td></tr>
+<tr><td>RF-AUT-04</td><td><code>BiometricPrompt</code> real con BIOMETRIC_STRONG.</td><td>Llave en Android Keystore que proteja el <em>refresh token</em>.</td></tr>
+<tr><td>RF-AUT-05</td><td>Valida el correo y muestra la respuesta uniforme; no envía correo.</td><td>Envío del enlace de un solo uso.</td></tr>
+<tr><td>RF-PAG-02 y 03</td><td>Pago simulado sin cobro y sin capturar datos de tarjeta. La app confirma el pedido.</td><td>Checkout tokenizado y confirmación por webhook.</td></tr>
+<tr><td>RF-PAG-04</td><td>Comprobante en pantalla.</td><td>Factura electrónica.</td></tr>
+<tr><td>RF-PAG-05</td><td>Solicitud de retracto para pedidos entregados; no valida el plazo de 5 días hábiles.</td><td>Validación del plazo y trámite de reversión.</td></tr>
+<tr><td>RF-INI-03, RF-CAR-02, RF-PER-03</td><td>Mapa ilustrativo, dirección de ejemplo, distancias fijas y envío fijo de $ 3.000 por vendedor.</td><td>Maps SDK, Fused Location y cálculo por distancia.</td></tr>
+<tr><td>RF-PRO-01, RF-PER-02</td><td>Una foto por producto, con la app de cámara del sistema o el Photo Picker; se conserva en memoria.</td><td>CameraX, hasta 5 fotos, WebP, eliminación de EXIF y Storage.</td></tr>
+<tr><td>RF-CAR-01, RF-CAR-05, RNF-REN-04</td><td>Carrito en memoria.</td><td>Room, sincronización y revalidación en servidor.</td></tr>
+<tr><td>RF-PED-03</td><td>El estado del pedido es único; si un pedido tiene varios vendedores, el avance de uno afecta a todo el pedido.</td><td>Estado por vendedor y máquina de estados en servidor.</td></tr>
+<tr><td>RF-ADU-02, RNF-SEG-07</td><td>Aviso del documento y auditoría en memoria.</td><td>Documento con URL firmada y <code>audit_log</code> en el backend.</td></tr>
+<tr><td>RF-ADP-03, RF-PRO-05</td><td>Denuncias no implementadas. El stock bajo se muestra como etiqueta y contador, sin notificación.</td><td>Pantalla de denuncias y notificaciones FCM.</td></tr>
+<tr><td>RNF-SEG-02, 05 y 06; RNF-REN-01 y 03; RNF-MAN-01</td><td>No medidos ni verificados en esta etapa. <code>allowBackup</code> está desactivado y el tráfico sin cifrar bloqueado.</td><td>DataStore cifrado, pruebas de rendimiento, OWASP MASVS y pruebas unitarias.</td></tr>
+</table>
+
+<h2>Trazabilidad</h2>
+<p class="cap">Tabla A3</p><p class="sub">Pantallas mínimas de la actividad y su implementación</p>
+<table>
+<tr><th style="width:18%">Rol</th><th style="width:38%">Pantalla exigida</th><th>Implementación</th></tr>
+<tr><td>Administrador</td><td>Dashboard principal</td><td>AdminDashboardFragment</td></tr>
+<tr><td>Administrador</td><td>Gestión de usuarios (listado, creación, edición, eliminación)</td><td>AdminUsersFragment, UserFormActivity</td></tr>
+<tr><td>Administrador</td><td>Gestión de productos</td><td>AdminProductsFragment, ProductReviewActivity</td></tr>
+<tr><td>Administrador</td><td>Reporte de ventas</td><td>SalesReportFragment</td></tr>
+<tr><td>Vendedor</td><td>Panel de productos (CRUD completo)</td><td>SellerDashboardFragment, SellerProductsFragment, ProductFormActivity</td></tr>
+<tr><td>Vendedor</td><td>Historial de pedidos recibidos</td><td>SellerOrdersFragment, SellerOrderDetailActivity</td></tr>
+<tr><td>Vendedor</td><td>Perfil de vendedor</td><td>SellerProfileFragment, EditProfileActivity</td></tr>
+<tr><td>Comprador</td><td>Inicio y catálogo</td><td>BuyerHomeFragment, CatalogFragment</td></tr>
+<tr><td>Comprador</td><td>Detalle y carrito</td><td>ProductDetailActivity, CartFragment</td></tr>
+<tr><td>Comprador</td><td>Pasarela de pagos</td><td>CheckoutActivity, PaymentActivity, PaymentResultActivity</td></tr>
+<tr><td>Comprador</td><td>Perfil de usuario</td><td>ProfileFragment, EditProfileActivity</td></tr>
+<tr><td>Todos</td><td>Splash y autenticación con biometría</td><td>SplashActivity, LoginActivity</td></tr>
+<tr><td>Todos</td><td>Menú de navegación</td><td>RoleHostActivity (Drawer y Bottom Navigation)</td></tr>
+<tr><td>Todos</td><td>Recuperación de contraseña</td><td>RecoverPasswordActivity</td></tr>
+</table>
+</body>
+</html>
