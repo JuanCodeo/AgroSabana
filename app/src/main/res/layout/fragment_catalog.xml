@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="@dimen/space_l" android:paddingTop="@dimen/space_m">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/search_products" app:startIconDrawable="@drawable/ic_search">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/search" android:layout_width="match_parent" android:layout_height="wrap_content" android:imeOptions="actionSearch" android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup android:id="@+id/categoryChips" android:layout_width="wrap_content" android:layout_height="wrap_content" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true" />
+        </HorizontalScrollView>
+        <com.google.android.material.chip.ChipGroup android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleLine="true">
+            <com.google.android.material.chip.Chip android:id="@+id/nearChip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/near_filter" />
+            <com.google.android.material.chip.Chip android:id="@+id/priceChip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort_price" />
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/grid" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingHorizontal="@dimen/space_m" android:paddingBottom="@dimen/space_l" />
+        <TextView android:id="@+id/empty" style="@style/Text.Body" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:padding="@dimen/space_xl" android:text="@string/no_products" android:textColor="@color/text_secondary" android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <co.edu.ucompensar.agrosabana.ui.common.StepperView android:id="@+id/stepper" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
+            <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/total" android:textColor="@color/text_secondary" />
+            <TextView android:id="@+id/total" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+        </LinearLayout>
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" app:strokeColor="@color/state_info">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="@dimen/space_m">
+                <TextView style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/secure_checkout" android:textColor="@color/state_info" android:textStyle="bold" />
+                <com.google.android.material.chip.ChipGroup android:id="@+id/methodGroup" android:layout_width="wrap_content" android:layout_height="wrap_content" app:checkedChip="@id/methodPse" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true">
+                    <com.google.android.material.chip.Chip android:id="@+id/methodCard" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pay_card" />
+                    <com.google.android.material.chip.Chip android:id="@+id/methodPse" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pay_pse" />
+                    <com.google.android.material.chip.Chip android:id="@+id/methodNequi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pay_nequi" />
+                </com.google.android.material.chip.ChipGroup>
+                <TextView style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/card_outside" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" android:background="@drawable/bg_banner_tint" android:orientation="vertical">
+            <TextView style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/gateway_notice_title" android:textStyle="bold" />
+            <TextView style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/gateway_notice_body" />
+        </LinearLayout>
+        <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/progress" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" android:indeterminate="true" android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/payButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" tools:text="Pagar $ 44.000" />
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

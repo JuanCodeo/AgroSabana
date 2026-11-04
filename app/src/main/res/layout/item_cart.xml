@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:id="@+id/sellerHeader" style="@style/Text.Subtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:layout_marginBottom="@dimen/space_s" tools:text="Finca El Rosal" />
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="@dimen/space_s">
+            <ImageView android:id="@+id/thumb" android:layout_width="@dimen/thumb_list" android:layout_height="@dimen/thumb_list" android:background="@drawable/bg_thumb" android:importantForAccessibility="no" android:padding="@dimen/space_s" tools:src="@drawable/ill_fruit" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="@dimen/space_m" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:id="@+id/name" style="@style/Text.Body" android:layout_width="match_parent" android:layout_height="wrap_content" android:textStyle="bold" tools:text="Fresa x 500 g" />
+                <TextView android:id="@+id/subtotal" style="@style/Text.Price" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="@dimen/text_body" tools:text="$ 17.000" />
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                    <ImageButton android:id="@+id/decrease" android:layout_width="@dimen/touch_min" android:layout_height="@dimen/touch_min" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/decrease" android:src="@drawable/ic_remove" app:tint="?attr/agroAccentText" />
+                    <TextView android:id="@+id/quantity" style="@style/Text.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="24dp" android:gravity="center" tools:text="2" />
+                    <ImageButton android:id="@+id/increase" android:layout_width="@dimen/touch_min" android:layout_height="@dimen/touch_min" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/increase" android:src="@drawable/ic_add" app:tint="?attr/agroAccentText" />
+                </LinearLayout>
+            </LinearLayout>
+            <ImageButton android:id="@+id/remove" android:layout_width="@dimen/touch_min" android:layout_height="@dimen/touch_min" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/remove_item" android:src="@drawable/ic_delete" app:tint="@color/state_error" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

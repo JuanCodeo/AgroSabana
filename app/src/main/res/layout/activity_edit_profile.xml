@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <ImageView android:id="@+id/avatar" android:layout_width="@dimen/avatar_size" android:layout_height="@dimen/avatar_size" android:layout_gravity="center_horizontal" android:background="@drawable/bg_avatar" android:contentDescription="@string/photo_description" android:padding="@dimen/space_m" android:src="@drawable/ic_person" app:tint="?attr/agroAccentText" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/photoButton" style="@style/Widget.AgroSabana.Button.Text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:text="@string/change_photo" app:icon="@drawable/ic_camera" />
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/nameLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/full_name" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/name" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/phoneLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/phone" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/phone" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/municipalityLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/municipality" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/municipality" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/addressLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/main_address" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/address" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <FrameLayout android:layout_width="match_parent" android:layout_height="@dimen/map_height" android:layout_marginBottom="@dimen/space_m"
+            android:background="@drawable/bg_map_placeholder" android:contentDescription="@string/map_description">
+            <ImageView android:layout_width="40dp" android:layout_height="40dp" android:layout_gravity="center" android:importantForAccessibility="no"
+                android:src="@drawable/ic_pin" app:tint="@color/state_error" />
+            <!-- Maps SDK en la etapa de backend -->
+        </FrameLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/saveButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/save_changes" />
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

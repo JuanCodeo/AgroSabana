@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <co.edu.ucompensar.agrosabana.ui.common.StepperView android:id="@+id/stepper" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" />
+        <FrameLayout android:layout_width="match_parent" android:layout_height="@dimen/map_height" android:layout_marginBottom="@dimen/space_m"
+            android:background="@drawable/bg_map_placeholder" android:contentDescription="@string/map_description">
+            <ImageView android:layout_width="40dp" android:layout_height="40dp" android:layout_gravity="center" android:importantForAccessibility="no"
+                android:src="@drawable/ic_pin" app:tint="@color/state_error" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/locationButton" style="@style/Widget.AgroSabana.Button.Outlined" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="@dimen/space_s" android:backgroundTint="@color/surface_card" android:text="@string/use_my_location" app:icon="@drawable/ic_pin" />
+        </FrameLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/addressLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/address" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/address" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
+            <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/subtotal" android:textColor="@color/text_secondary" />
+            <TextView android:id="@+id/subtotal" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
+            <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/shipping" android:textColor="@color/text_secondary" />
+            <TextView android:id="@+id/shipping" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
+            <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/total" android:textColor="@color/text_secondary" />
+            <TextView android:id="@+id/total" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+        </LinearLayout>
+        <TextView android:id="@+id/sellers" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Vendedores: Finca El Rosal" />
+        <TextView style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:text="@string/taxes_included" />
+        <TextView style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:background="@drawable/bg_banner_warn" android:text="@string/retract_notice" />
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/termsSwitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/accept_terms_retract" />
+        <TextView android:id="@+id/termsError" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/error_terms" android:textColor="@color/state_error" android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/payButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/go_to_pay" />
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

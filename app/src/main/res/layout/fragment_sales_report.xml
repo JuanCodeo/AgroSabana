@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout style="@style/Layout.Page">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <include android:id="@+id/tile1" layout="@layout/view_stat_tile" />
+            <include android:id="@+id/tile2" layout="@layout/view_stat_tile" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <include android:id="@+id/tile3" layout="@layout/view_stat_tile" />
+            <include android:id="@+id/tile4" layout="@layout/view_stat_tile" />
+        </LinearLayout>
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/space_xs">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="@dimen/space_m">
+                <TextView style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:text="@string/orders_per_day" android:textStyle="bold" />
+                <co.edu.ucompensar.agrosabana.ui.common.BarChartView android:id="@+id/chart" android:layout_width="match_parent" android:layout_height="@dimen/chart_height" android:contentDescription="@string/chart_description" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <TextView style="@style/Text.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" android:layout_marginBottom="@dimen/space_s" android:text="@string/top_sellers" />
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/topSellers" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+        <TextView style="@style/Text.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" android:text="@string/recent_orders" />
+        <com.google.android.material.chip.ChipGroup android:id="@+id/chips" android:layout_width="wrap_content" android:layout_height="wrap_content" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true" />
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/orders" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+        <TextView android:id="@+id/empty" style="@style/Text.Body" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:padding="@dimen/space_l" android:text="@string/no_sales" android:textColor="@color/text_secondary" android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/exportButton" style="@style/Widget.AgroSabana.Button.Outlined" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/export_report" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <FrameLayout android:id="@+id/photoFrame" android:layout_width="match_parent" android:layout_height="170dp" android:layout_marginBottom="@dimen/space_m" android:background="@color/agro_slate_dark" android:clickable="true" android:focusable="true">
+            <ImageView android:id="@+id/photo" android:layout_width="match_parent" android:layout_height="match_parent" android:contentDescription="@string/photo_description" android:scaleType="centerCrop" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/photoButton" style="@style/Widget.AgroSabana.Button.Accent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/take_or_choose_photo" app:icon="@drawable/ic_camera" />
+        </FrameLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/nameLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/product_name" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/name" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/descriptionLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/description" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/description" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/priceLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/price_cop" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/price" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/stockLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/stock" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/stock" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/unitLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/unit" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/unit" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/categoryLayout" style="@style/Widget.AgroSabana.TextInput.Dropdown" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/category">
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/category" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/saveButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/send_to_review" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/deleteButton" style="@style/Widget.AgroSabana.Button.Danger" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/delete_product" android:visibility="gone" app:icon="@drawable/ic_delete" app:iconTint="@color/state_error" />
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

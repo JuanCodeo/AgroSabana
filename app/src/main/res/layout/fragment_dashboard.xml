@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout style="@style/Layout.Page">
+        <TextView android:id="@+id/banner" style="@style/Text.Body" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" tools:background="@drawable/bg_banner_tint" tools:text="Cuenta verificada" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <include android:id="@+id/tile1" layout="@layout/view_stat_tile" />
+            <include android:id="@+id/tile2" layout="@layout/view_stat_tile" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <include android:id="@+id/tile3" layout="@layout/view_stat_tile" />
+            <include android:id="@+id/tile4" layout="@layout/view_stat_tile" />
+        </LinearLayout>
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/space_xs">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="@dimen/space_m">
+                <TextView android:id="@+id/chartTitle" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:textStyle="bold" tools:text="Ventas últimos 7 días" />
+                <co.edu.ucompensar.agrosabana.ui.common.BarChartView android:id="@+id/chart" android:layout_width="match_parent" android:layout_height="@dimen/chart_height" android:contentDescription="@string/chart_description" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView android:id="@+id/noticeCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/space_xs" android:clickable="true" android:focusable="true" android:visibility="gone" app:cardBackgroundColor="@color/surface_warn" tools:visibility="visible">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="@dimen/touch_min" android:orientation="vertical" android:padding="@dimen/space_m">
+                <TextView android:id="@+id/noticeTitle" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" tools:text="7 solicitudes de vendedor" />
+                <TextView style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/review_documents" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.button.MaterialButton android:id="@+id/primaryAction" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" tools:text="Publicar producto" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

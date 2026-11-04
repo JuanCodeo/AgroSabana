@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical">
+    <ImageView android:id="@+id/avatar" android:layout_width="@dimen/avatar_size" android:layout_height="@dimen/avatar_size" android:background="@drawable/bg_avatar" android:contentDescription="@string/photo_description" android:padding="@dimen/space_m" android:src="@drawable/ic_person" app:tint="?attr/agroAccentText" />
+    <TextView android:id="@+id/name" style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" tools:text="Juan Pérez" />
+    <TextView android:id="@+id/detail" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_l" tools:text="Comprador · Funza" />
+</LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <ImageView android:layout_width="@dimen/avatar_size" android:layout_height="@dimen/avatar_size" android:layout_gravity="center_horizontal" android:layout_marginBottom="@dimen/space_s" android:background="@drawable/bg_avatar" android:backgroundTint="@color/agro_slate_soft" android:importantForAccessibility="no" android:padding="@dimen/space_m" android:src="@drawable/ic_person" app:tint="@color/agro_slate" />
+        <TextView android:id="@+id/statusText" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginBottom="@dimen/space_m" tools:text="Estado actual: PENDIENTE" />
+        <LinearLayout android:id="@+id/documentCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:background="@drawable/bg_banner_warn" android:orientation="vertical" android:visibility="gone" tools:visibility="visible">
+            <TextView style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/document_title" android:textStyle="bold" />
+            <TextView style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/document_body" />
+        </LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/nameLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/full_name" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/name" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/emailLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/email" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/email" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/phoneLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/phone" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/phone" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/municipalityLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/municipality" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/municipality" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/roleLayout" style="@style/Widget.AgroSabana.TextInput.Dropdown" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/role">
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/role" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/saveButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:text="@string/save_changes" />
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/reasonLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/reason_required" android:visibility="gone" tools:visibility="visible">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/reason" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/approveButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:backgroundTint="@color/agro_green" android:text="@string/approve_seller" android:visibility="gone" tools:visibility="visible" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/rejectButton" style="@style/Widget.AgroSabana.Button.Danger" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/reject" android:visibility="gone" tools:visibility="visible" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/suspendButton" style="@style/Widget.AgroSabana.Button.Outlined" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:visibility="gone" tools:text="Suspender" tools:visibility="visible" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/deleteButton" style="@style/Widget.AgroSabana.Button.TextDanger" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:text="@string/delete_user" android:visibility="gone" tools:visibility="visible" />
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

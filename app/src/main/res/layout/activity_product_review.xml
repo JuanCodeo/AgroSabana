@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <ImageView android:id="@+id/image" android:layout_width="match_parent" android:layout_height="190dp" android:layout_marginBottom="@dimen/space_m" android:importantForAccessibility="no" android:padding="@dimen/space_xl" tools:background="@color/cat_vegetable" tools:src="@drawable/ill_vegetable" />
+        <TextView android:id="@+id/name" style="@style/Text.Title" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Arveja x libra" />
+        <TextView android:id="@+id/line" style="@style/Text.Caption" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="Finca El Rosal · $ 5.200 · Stock 15" />
+        <TextView android:id="@+id/description" style="@style/Text.Body" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginVertical="@dimen/space_s" tools:text="Arveja verde desgranada." />
+        <TextView android:id="@+id/statusBadge" style="@style/Text.Badge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" tools:text="PENDIENTE" />
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/reasonLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/reason" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/reason" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/approveButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:backgroundTint="@color/agro_green" android:text="@string/approve_publication" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/rejectButton" style="@style/Widget.AgroSabana.Button.Danger" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/reject" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/hideButton" style="@style/Widget.AgroSabana.Button.Outlined" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/hide" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/deleteButton" style="@style/Widget.AgroSabana.Button.TextDanger" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:text="@string/delete_product" />
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <LinearLayout style="@style/Layout.Page">
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/nameLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/full_name" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/name" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/emailLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/email" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/email" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/passwordLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/password" app:endIconMode="password_toggle">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/password" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/municipalityLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:hint="@string/municipality" >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/municipality" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView style="@style/Text.Subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_s" android:text="@string/use_app_as" />
+        <RadioGroup android:id="@+id/roleGroup" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:checkedButton="@id/roleBuyer">
+            <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/roleBuyer" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/role_buyer" />
+            <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/roleSeller" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/seller_needs_verification" />
+        </RadioGroup>
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/termsSwitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/accept_terms" />
+        <TextView android:id="@+id/termsError" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/error_terms" android:textColor="@color/state_error" android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/createButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" android:text="@string/create_account" />
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

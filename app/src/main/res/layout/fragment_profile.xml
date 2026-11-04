@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout style="@style/Layout.Page">
+        <include android:id="@+id/header" layout="@layout/view_profile_header" />
+        <com.google.android.material.card.MaterialCardView android:id="@+id/dataCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:clickable="true" android:focusable="true">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:minHeight="64dp" android:orientation="horizontal" android:padding="@dimen/space_m">
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:importantForAccessibility="no" android:src="@drawable/ic_edit" app:tint="?attr/agroAccentText" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="@dimen/space_m" android:layout_weight="1" android:orientation="vertical">
+                    <TextView style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/my_data" android:textStyle="bold" />
+                    <TextView style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/my_data_hint" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView android:id="@+id/addressCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_m" android:clickable="true" android:focusable="true">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:minHeight="64dp" android:orientation="horizontal" android:padding="@dimen/space_m">
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:importantForAccessibility="no" android:src="@drawable/ic_pin" app:tint="?attr/agroAccentText" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="@dimen/space_m" android:layout_weight="1" android:orientation="vertical">
+                    <TextView style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/my_addresses" android:textStyle="bold" />
+                    <TextView android:id="@+id/addressText" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Cra 15 # 8-21, Funza" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/biometricSwitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/fingerprint_login" />
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/notificationsSwitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/notifications" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/logoutButton" style="@style/Widget.AgroSabana.Button.Outlined" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_m" android:text="@string/logout" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/deleteButton" style="@style/Widget.AgroSabana.Button.TextDanger" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:text="@string/delete_account" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
