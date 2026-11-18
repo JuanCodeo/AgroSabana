@@ -1,0 +1,24 @@
+rules_version = '2';
+
+// Reglas de Firebase Storage para AgroSabana: solo imagenes de hasta 5 MB y usuarios autenticados.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isImage() {
+      return request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+    }
+
+    // Fotos de productos: las sube el vendedor desde la camara o la galeria.
+    match /products/{productId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && isImage();
+      allow delete: if request.auth != null;
+    }
+
+    // Foto de perfil: solo la escribe su dueno.
+    match /users/{userId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId && isImage();
+    }
+  }
+}

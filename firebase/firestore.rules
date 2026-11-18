@@ -1,0 +1,120 @@
+rules_version = '2';
+
+// Reglas de seguridad de Cloud Firestore para AgroSabana.
+// El rol y el estado de cada cuenta se leen de users/{uid}; el cliente nunca puede asignarse
+// el rol de administrador ni cambiar su propio estado.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function profile() { return get(/databases/$(database)/documents/users/$(uid())).data; }
+    function hasProfile() { return signedIn() && exists(/databases/$(database)/documents/users/$(uid())); }
+    function isAdmin() { return hasProfile() && profile().role == 'ADMIN' && profile().status == 'ACTIVO'; }
+    function isSeller() { return hasProfile() && profile().role == 'SELLER' && profile().status != 'SUSPENDIDO'; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    // ---------- Usuarios ----------
+    match /users/{userId} {
+      allow read: if signedIn() && (uid() == userId || isAdmin());
+
+      // Registro publico: solo Comprador (ACTIVO) o Vendedor (PENDIENTE). El admin crea cualquiera.
+      allow create: if isAdmin() || (
+        signedIn() && uid() == userId && (
+          (request.resource.data.role == 'BUYER' && request.resource.data.status == 'ACTIVO') ||
+          (request.resource.data.role == 'SELLER' && request.resource.data.status == 'PENDIENTE')
+        )
+      );
+
+      // El usuario edita su perfil, pero no su rol, estado ni correo.
+      allow update: if isAdmin() || (
+        signedIn() && uid() == userId && !changed().hasAny(['role', 'status', 'email'])
+      );
+
+      allow delete: if isAdmin() || (signedIn() && uid() == userId);
+    }
+
+    // ---------- Productos ----------
+    match /products/{productId} {
+      // El comprador ve los aprobados; el vendedor tambien los suyos; el admin todos.
+      allow read: if signedIn() && (
+        resource.data.status == 'APROBADO' || resource.data.sellerId == uid() || isAdmin()
+      );
+
+      // Todo producto nuevo entra a moderacion.
+      allow create: if isSeller()
+        && request.resource.data.sellerId == uid()
+        && request.resource.data.status == 'PENDIENTE'
+        && request.resource.data.priceCents is int && request.resource.data.priceCents > 0
+        && request.resource.data.stock is int && request.resource.data.stock >= 0;
+
+      allow update: if isAdmin()
+        // El vendedor edita lo suyo y vuelve a moderacion (o lo oculta).
+        || (isSeller() && resource.data.sellerId == uid()
+            && request.resource.data.sellerId == uid()
+            && request.resource.data.status in ['PENDIENTE', 'OCULTO'])
+        // Al confirmarse un pago, el comprador solo puede descontar stock y sumar vendidos.
+        || (signedIn() && resource.data.status == 'APROBADO'
+            && changed().hasOnly(['stock', 'sold'])
+            && request.resource.data.stock >= 0
+            && request.resource.data.stock < resource.data.stock
+            && request.resource.data.sold > resource.data.sold);
+
+      allow delete: if isAdmin() || (signedIn() && resource.data.sellerId == uid());
+    }
+
+    // ---------- Carrito ----------
+    match /carts/{userId}/items/{productId} {
+      allow read, write: if signedIn() && uid() == userId;
+    }
+
+    // ---------- Pedidos ----------
+    match /orders/{code} {
+      allow read: if signedIn() && (
+        resource.data.buyerId == uid() || uid() in resource.data.sellerIds || isAdmin()
+      );
+
+      // El pedido nace sin pagar y a nombre de quien lo crea.
+      allow create: if signedIn()
+        && request.resource.data.buyerId == uid()
+        && request.resource.data.status == 'PENDIENTE_PAGO';
+
+      allow update: if isAdmin()
+        // Comprador: registrar el resultado de ePayco, cancelar antes del envio o pedir retracto.
+        || (signedIn() && resource.data.buyerId == uid() && (
+              (resource.data.status == 'PENDIENTE_PAGO'
+                && request.resource.data.status in ['PENDIENTE_PAGO', 'PAGADO', 'PAGO_RECHAZADO', 'CANCELADO']
+                && changed().hasOnly(['status', 'payment', 'paidAt', 'updatedAt']))
+           || (resource.data.status in ['PAGADO', 'PREPARANDO']
+                && request.resource.data.status == 'CANCELADO'
+                && changed().hasOnly(['status', 'updatedAt']))
+           || (resource.data.status == 'ENTREGADO'
+                && request.resource.data.status == 'RETRACTO'
+                && changed().hasOnly(['status', 'updatedAt']))
+           ))
+        // Vendedor: avanzar el flujo de entrega o reportar un problema.
+        || (signedIn() && uid() in resource.data.sellerIds
+            && changed().hasOnly(['status', 'problem', 'updatedAt'])
+            && (
+              (resource.data.status == 'PAGADO' && request.resource.data.status == 'PREPARANDO') ||
+              (resource.data.status == 'PREPARANDO' && request.resource.data.status == 'ENVIADO') ||
+              (resource.data.status == 'ENVIADO' && request.resource.data.status == 'ENTREGADO') ||
+              (resource.data.status in ['PAGADO', 'PREPARANDO', 'ENVIADO'] && request.resource.data.status == 'DISPUTA')
+            ));
+
+      allow delete: if false; // nunca hay borrado fisico de pedidos (RF-PED-04)
+    }
+
+    // ---------- Auditoria ----------
+    match /audit/{entryId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // ---------- Configuracion (categorias activas) ----------
+    match /config/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+  }
+}
