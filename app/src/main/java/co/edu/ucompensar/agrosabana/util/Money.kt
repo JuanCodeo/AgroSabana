@@ -10,5 +10,7 @@ object Money {
 
     fun format(cents: Long): String = "$ " + number.format(cents / 100)
 
-    fun distance(km: Double): String = String.format(locale, "%.1f km", km)
+    /** Distancia legible; cadena vacia si no se conoce la ubicacion del comprador o del vendedor. */
+    fun distance(km: Double): String =
+        if (km >= co.edu.ucompensar.agrosabana.data.Store.UNKNOWN_DISTANCE) "" else String.format(locale, "%.1f km", km)
 }
