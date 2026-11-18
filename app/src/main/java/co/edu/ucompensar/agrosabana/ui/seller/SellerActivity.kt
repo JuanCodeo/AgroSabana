@@ -21,6 +21,7 @@ import co.edu.ucompensar.agrosabana.ui.common.SellerProfileFragment
 import co.edu.ucompensar.agrosabana.util.Money
 
 private const val LOW_STOCK_THRESHOLD = 5
+private const val CHART_DAYS = 7
 
 class SellerActivity : RoleHostActivity() {
     override val bottomMenu = R.menu.menu_bottom_seller
@@ -52,10 +53,12 @@ class SellerDashboardFragment : Fragment() {
         binding.primaryAction.setOnClickListener {
             startActivity(Intent(requireContext(), ProductFormActivity::class.java))
         }
+        Store.changes.observe(viewLifecycleOwner) { render() }
     }
 
-    override fun onResume() {
-        super.onResume()
+    /** Indicadores del vendedor calculados con sus productos y pedidos en tiempo real. */
+    private fun render() {
+        if (_binding == null) return
         val user = Session(requireContext()).currentUser ?: return
         (activity as? SellerActivity)?.setScreenTitle(getString(R.string.hello_seller, user.name))
 
@@ -75,6 +78,7 @@ class SellerDashboardFragment : Fragment() {
         binding.tile3.value.text = active.size.toString()
         binding.tile4.label.setText(R.string.low_stock)
         binding.tile4.value.text = active.count { it.stock < LOW_STOCK_THRESHOLD }.toString()
+        binding.chart.values = Store.dailySales(CHART_DAYS, user.id)
         binding.noticeCard.isVisible = false
     }
 
@@ -117,20 +121,20 @@ class SellerProductsFragment : ListFragment() {
                     else -> product.status.label to product.status.color
                 }
                 Row(
-                    id = product.id.toString(),
+                    id = product.id,
                     title = product.name,
                     subtitle = getString(R.string.product_row, product.stock, Money.format(product.priceCents)),
                     icon = product.category.illustration,
                     iconBackground = product.category.background,
                     badge = getString(badge),
                     badgeColor = color,
-                    photo = product.photo
+                    photo = product.photoUrl
                 )
             }
     }
 
     override fun onRowClick(row: Row) {
-        startActivity(ProductFormActivity.intentFor(requireContext(), row.id.toInt()))
+        startActivity(ProductFormActivity.intentFor(requireContext(), row.id))
     }
 }
 

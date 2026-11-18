@@ -71,14 +71,11 @@ class BuyerHomeFragment : Fragment() {
         val openCatalog = View.OnClickListener { (activity as BuyerActivity).selectDestination(R.id.nav_catalog) }
         binding.searchCard.setOnClickListener(openCatalog)
         binding.catalogButton.setOnClickListener(openCatalog)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refresh()
+        Store.changes.observe(viewLifecycleOwner) { refresh() }
     }
 
     private fun refresh() {
+        if (_binding == null) return
         adapter.submit(
             Store.visibleProducts()
                 .filter { category == null || it.category == category }
@@ -118,14 +115,11 @@ class CatalogFragment : Fragment() {
         binding.priceChip.isCheckable = true
         binding.nearChip.setOnCheckedChangeListener { _, _ -> refresh() }
         binding.priceChip.setOnCheckedChangeListener { _, _ -> refresh() }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refresh()
+        Store.changes.observe(viewLifecycleOwner) { refresh() }
     }
 
     private fun refresh() {
+        if (_binding == null) return
         val query = binding.search.text?.toString()?.trim().orEmpty()
         val filtered = Store.visibleProducts().filter { product ->
             (category == null || product.category == category) &&

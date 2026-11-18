@@ -3,7 +3,9 @@ package co.edu.ucompensar.agrosabana.ui.common
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
@@ -13,10 +15,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.core.content.FileProvider
 import co.edu.ucompensar.agrosabana.R
 import co.edu.ucompensar.agrosabana.databinding.DialogInputBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
+import java.io.File
 
 val TextInputLayout.text: String get() = editText?.text?.toString()?.trim().orEmpty()
 
@@ -77,11 +81,20 @@ fun Context.promptText(
     }
 }
 
-/** Foto desde la camara o el Photo Picker del sistema; ninguno requiere permisos en el manifiesto. */
+/**
+ * Foto desde la camara o desde el Photo Picker del sistema (galeria).
+ *
+ * La camara guarda la foto en resolucion completa en un archivo temporal compartido con
+ * FileProvider; luego se reduce a un maximo de [MAX_SIDE] px para subirla rapido a Firebase Storage.
+ * Ninguna de las dos opciones requiere permisos en el manifiesto.
+ */
 class PhotoPicker(private val activity: ComponentActivity, private val onPhoto: (Bitmap) -> Unit) {
 
-    private val camera = activity.registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-        bitmap?.let(onPhoto)
+    private var pendingCameraUri: Uri? = null
+
+    private val camera = activity.registerForActivityResult(ActivityResultContracts.TakePicture()) { saved ->
+        val uri = pendingCameraUri
+        if (saved && uri != null) loadFromUri(uri)
     }
 
     private val gallery = activity.registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -101,17 +114,41 @@ class PhotoPicker(private val activity: ComponentActivity, private val onPhoto: 
 
     private fun launchCamera() {
         try {
-            camera.launch(null)
+            val dir = File(activity.cacheDir, "camera").apply { mkdirs() }
+            val file = File(dir, "foto_${System.currentTimeMillis()}.jpg")
+            val uri = FileProvider.getUriForFile(activity, activity.packageName + ".fileprovider", file)
+            pendingCameraUri = uri
+            camera.launch(uri)
         } catch (_: android.content.ActivityNotFoundException) {
             Toast.makeText(activity, R.string.camera_unavailable, Toast.LENGTH_LONG).show()
         }
     }
 
+    /** Decodifica la imagen ya reducida; ImageDecoder (Android 9+) respeta la rotacion EXIF. */
     private fun loadFromUri(uri: Uri) {
-        val bitmap = activity.contentResolver.openInputStream(uri)?.use { stream ->
-            BitmapFactory.decodeStream(stream, null, BitmapFactory.Options().apply { inSampleSize = 4 })
-        }
+        val bitmap = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(activity.contentResolver, uri)
+                ImageDecoder.decodeBitmap(source) { decoder, info, _ ->
+                    val scale = MAX_SIDE.toFloat() / maxOf(info.size.width, info.size.height)
+                    if (scale < 1f) decoder.setTargetSize((info.size.width * scale).toInt(), (info.size.height * scale).toInt())
+                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                }
+            } else {
+                val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                activity.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+                var sample = 1
+                while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= MAX_SIDE) sample *= 2
+                activity.contentResolver.openInputStream(uri)?.use {
+                    BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample })
+                }
+            }
+        }.getOrNull()
         if (bitmap != null) onPhoto(bitmap)
         else Toast.makeText(activity, R.string.photo_error, Toast.LENGTH_LONG).show()
+    }
+
+    private companion object {
+        const val MAX_SIDE = 1280
     }
 }

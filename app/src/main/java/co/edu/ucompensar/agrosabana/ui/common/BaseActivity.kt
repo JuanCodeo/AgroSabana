@@ -14,6 +14,7 @@ import co.edu.ucompensar.agrosabana.data.Session
 import co.edu.ucompensar.agrosabana.data.User
 import co.edu.ucompensar.agrosabana.ui.admin.AdminActivity
 import co.edu.ucompensar.agrosabana.ui.auth.LoginActivity
+import co.edu.ucompensar.agrosabana.ui.auth.SplashActivity
 import co.edu.ucompensar.agrosabana.ui.buyer.BuyerActivity
 import co.edu.ucompensar.agrosabana.ui.seller.SellerActivity
 
@@ -61,6 +62,18 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
     }
 
+    /**
+     * Pantallas internas: si el proceso se reinicio y aun no hay datos en memoria, se vuelve al
+     * Splash para restaurar la sesion de Firebase. @return false si se redirigio.
+     */
+    protected fun requireSession(): Boolean {
+        if (session.currentUser != null) return true
+        startActivity(Intent(this, SplashActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        finish()
+        return false
+    }
+
+    /** Cierra la sesion de Firebase, detiene los listeners y vuelve al inicio de sesion. */
     fun logoutAndExit() {
         session.logout()
         startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))

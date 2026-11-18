@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import co.edu.ucompensar.agrosabana.R
+import co.edu.ucompensar.agrosabana.data.AuthRepository
 import co.edu.ucompensar.agrosabana.data.Session
 import co.edu.ucompensar.agrosabana.data.Store
 import co.edu.ucompensar.agrosabana.data.User
@@ -25,25 +26,44 @@ private fun ViewProfileHeaderBinding.show(user: User, detail: String) {
     this.detail.text = detail
 }
 
-/** Activar la huella exige que el dispositivo tenga una registrada (RF-PER-04). */
-private fun MaterialSwitch.bindBiometric(session: Session, user: User) {
-    isChecked = session.isBiometricEnabledFor(user)
+/**
+ * Interruptor de ingreso con huella (RF-PER-04). Activarlo pide la contrasena, la verifica con
+ * Firebase (reautenticacion) y la cifra con una llave del Keystore protegida por la huella.
+ */
+private fun MaterialSwitch.bindBiometric(fragment: Fragment, user: User) {
+    val context = fragment.requireContext()
+    setOnCheckedChangeListener(null)
+    isChecked = Biometrics.isEnabled(context) && Biometrics.enabledEmail(context).equals(user.email, ignoreCase = true)
     setOnCheckedChangeListener { view, checked ->
         when {
-            !checked -> session.disableBiometric()
-            Biometrics.isAvailable(context) -> {
-                session.biometricUserId = user.id
-                Snackbar.make(view, R.string.biometric_enabled, Snackbar.LENGTH_SHORT).show()
+            !checked -> Biometrics.disable(context)
+            !Biometrics.isAvailable(context) -> {
+                isChecked = false
+                Snackbar.make(view, R.string.biometric_unavailable, Snackbar.LENGTH_LONG).show()
             }
             else -> {
                 isChecked = false
-                Snackbar.make(view, R.string.biometric_unavailable, Snackbar.LENGTH_LONG).show()
+                context.promptText(R.string.biometric_confirm_password, R.string.password, R.string.biometric_activate, password = true) { password ->
+                    fragment.launchTask {
+                        if (!AuthRepository.reauthenticate(password)) {
+                            Snackbar.make(view, R.string.login_error, Snackbar.LENGTH_LONG).show()
+                            return@launchTask
+                        }
+                        Biometrics.enable(fragment.requireActivity(), user.email, password) { enabled ->
+                            if (enabled) bindBiometric(fragment, user)
+                            Snackbar.make(view, if (enabled) R.string.biometric_enabled else R.string.biometric_error, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-/** Doble confirmacion y reautenticacion antes de borrar la cuenta (RF-PER-05, Ley 1581). */
+/**
+ * Doble confirmacion y reautenticacion antes de borrar la cuenta (RF-PER-05, Ley 1581): se borra
+ * el perfil de Firestore y la cuenta de Firebase Authentication.
+ */
 private fun Fragment.confirmAccountDeletion(user: User) {
     MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.delete_account_title)
@@ -56,12 +76,13 @@ private fun Fragment.confirmAccountDeletion(user: User) {
                 R.string.delete_action,
                 password = true
             ) { password ->
-                if (Store.authenticate(user.email, password) == null) {
-                    Toast.makeText(requireContext(), R.string.login_error, Toast.LENGTH_LONG).show()
-                } else {
-                    val session = Session(requireContext())
-                    if (session.isBiometricEnabledFor(user)) session.disableBiometric()
-                    Store.deleteUser(user)
+                launchTask {
+                    if (!AuthRepository.reauthenticate(password)) {
+                        Toast.makeText(requireContext(), R.string.login_error, Toast.LENGTH_LONG).show()
+                        return@launchTask
+                    }
+                    Biometrics.disable(requireContext())
+                    AuthRepository.deleteOwnAccount(user)
                     (activity as BaseActivity).logoutAndExit()
                 }
             }
@@ -80,20 +101,22 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, state: Bundle?) {
+        Store.changes.observe(viewLifecycleOwner) { render() }
         val session = Session(requireContext())
         val user = session.currentUser ?: return
         val openEditor = View.OnClickListener { startActivity(Intent(requireContext(), EditProfileActivity::class.java)) }
         binding.dataCard.setOnClickListener(openEditor)
         binding.addressCard.setOnClickListener(openEditor)
-        binding.biometricSwitch.bindBiometric(session, user)
+        binding.biometricSwitch.bindBiometric(this, user)
         binding.notificationsSwitch.isChecked = session.notificationsEnabled
         binding.notificationsSwitch.setOnCheckedChangeListener { _, checked -> session.notificationsEnabled = checked }
         binding.logoutButton.setOnClickListener { (activity as BaseActivity).logoutAndExit() }
         binding.deleteButton.setOnClickListener { confirmAccountDeletion(user) }
     }
 
-    override fun onResume() {
-        super.onResume()
+    /** Se llama al abrir y cada vez que el perfil cambia en Firestore. */
+    private fun render() {
+        if (_binding == null) return
         val user = Session(requireContext()).currentUser ?: return
         binding.header.show(user, getString(R.string.role_city, getString(user.role.label), user.municipality))
         binding.addressText.text = user.address.ifEmpty { user.municipality }
@@ -117,18 +140,22 @@ class SellerProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, state: Bundle?) {
+        Store.changes.observe(viewLifecycleOwner) { render() }
         val session = Session(requireContext())
         val user = session.currentUser ?: return
         binding.radiusLayout.setText(user.deliveryRadiusKm.toString())
-        binding.biometricSwitch.bindBiometric(session, user)
+        binding.biometricSwitch.bindBiometric(this, user)
         binding.saveButton.setOnClickListener {
             val radius = binding.radiusLayout.text.toIntOrNull()
             if (radius == null || radius <= 0) {
                 binding.radiusLayout.error = getString(R.string.error_required)
             } else {
                 binding.radiusLayout.error = null
-                user.deliveryRadiusKm = radius
-                Snackbar.make(binding.root, R.string.saved, Snackbar.LENGTH_SHORT).show()
+                val current = Store.currentUser ?: return@setOnClickListener
+                launchTask {
+                    Store.updateProfile(current.copy(deliveryRadiusKm = radius), null)
+                    Snackbar.make(binding.root, R.string.saved, Snackbar.LENGTH_SHORT).show()
+                }
             }
         }
         binding.editButton.setOnClickListener { startActivity(Intent(requireContext(), EditProfileActivity::class.java)) }
@@ -136,8 +163,9 @@ class SellerProfileFragment : Fragment() {
         binding.deleteButton.setOnClickListener { confirmAccountDeletion(user) }
     }
 
-    override fun onResume() {
-        super.onResume()
+    /** Se llama al abrir y cada vez que el perfil cambia en Firestore. */
+    private fun render() {
+        if (_binding == null) return
         val user = Session(requireContext()).currentUser ?: return
         val state = if (user.status == UserStatus.ACTIVO) R.string.store_verified else R.string.store_pending
         binding.header.show(user, getString(state))

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/surface_page" android:fillViewport="true">
     <LinearLayout style="@style/Layout.Page" android:gravity="center_vertical">
-        <ImageView android:layout_width="84dp" android:layout_height="84dp" android:layout_gravity="center_horizontal" android:background="@drawable/bg_avatar" android:backgroundTint="@color/agro_green" android:importantForAccessibility="no" android:padding="@dimen/space_l" android:src="@drawable/ic_check" app:tint="@color/text_on_primary" />
-        <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginTop="@dimen/space_m" android:text="@string/payment_ok" />
+        <ImageView android:id="@+id/resultIcon" android:layout_width="84dp" android:layout_height="84dp" android:layout_gravity="center_horizontal" android:background="@drawable/bg_avatar" android:backgroundTint="@color/agro_green" android:importantForAccessibility="no" android:padding="@dimen/space_l" android:src="@drawable/ic_check" app:tint="@color/text_on_primary" />
+        <TextView android:id="@+id/resultTitle" style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginTop="@dimen/space_m" android:text="@string/payment_ok" />
         <TextView android:id="@+id/orderText" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginBottom="@dimen/space_xl" tools:text="Pedido #AS-10482 confirmado" />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
             <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/state" android:textColor="@color/text_secondary" />
@@ -13,6 +13,10 @@
             <TextView android:id="@+id/total" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
         </LinearLayout>
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
+            <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/payment_reference" android:textColor="@color/text_secondary" />
+            <TextView android:id="@+id/referenceValue" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/deliveryRow" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/space_s" android:orientation="horizontal">
             <TextView style="@style/Text.Body" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/estimated_delivery" android:textColor="@color/text_secondary" />
             <TextView android:id="@+id/deliveryValue" style="@style/Text.Body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
         </LinearLayout>

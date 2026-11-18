@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import co.edu.ucompensar.agrosabana.data.Store
 import co.edu.ucompensar.agrosabana.databinding.FragmentListBinding
 import com.google.android.material.chip.Chip
 
@@ -49,6 +50,8 @@ abstract class ListFragment : Fragment() {
         }
         bindFilters()
         configure()
+        // Cada cambio en Firestore llega por el listener del Store y redibuja la lista.
+        Store.changes.observe(viewLifecycleOwner) { refresh() }
     }
 
     private fun bindFilters() {
@@ -68,12 +71,8 @@ abstract class ListFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        refresh()
-    }
-
     protected fun refresh() {
+        if (_binding == null) return
         val query = binding.search.text?.toString()?.trim().orEmpty()
         val rows = rows(selectedFilter, query)
         adapter.submitList(rows)

@@ -8,6 +8,7 @@ import co.edu.ucompensar.agrosabana.data.Product
 import co.edu.ucompensar.agrosabana.data.Store
 import co.edu.ucompensar.agrosabana.databinding.ActivityProductDetailBinding
 import co.edu.ucompensar.agrosabana.ui.common.BaseActivity
+import co.edu.ucompensar.agrosabana.ui.common.launchTask
 import co.edu.ucompensar.agrosabana.ui.common.showProductImage
 import co.edu.ucompensar.agrosabana.util.Money
 import com.google.android.material.snackbar.Snackbar
@@ -21,14 +22,15 @@ class ProductDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!requireSession()) return
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupBackToolbar(binding.toolbar, R.string.detail_title)
 
-        product = Store.product(intent.getIntExtra(EXTRA_ID, -1)) ?: run { finish(); return }
-        binding.image.showProductImage(product.photo, product.category.illustration, product.category.background)
+        product = Store.product(intent.getStringExtra(EXTRA_ID).orEmpty()) ?: run { finish(); return }
+        binding.image.showProductImage(product.photoUrl, product.category.illustration, product.category.background)
         binding.name.text = product.name
-        binding.seller.text = getString(R.string.seller_line, product.sellerName, product.municipality, Money.distance(product.distanceKm))
+        binding.seller.text = getString(R.string.seller_line, product.sellerName, product.municipality, Money.distance(product.distanceKm)).trimEnd(' ', '·')
         binding.price.text = Money.format(product.priceCents)
         binding.available.text = resources.getQuantityString(R.plurals.units, product.stock, product.stock)
         binding.description.text = product.description
@@ -49,7 +51,8 @@ class ProductDetailActivity : BaseActivity() {
         binding.quantity.text = quantity.toString()
     }
 
-    private fun addToCart() {
+    /** Agrega al carrito persistente en Firestore (carts/{uid}/items). */
+    private fun addToCart() = launchTask {
         if (Store.addToCart(product, quantity)) {
             Snackbar.make(binding.root, R.string.added_to_cart, Snackbar.LENGTH_LONG)
                 .setAction(R.string.go_to_cart) {
@@ -64,7 +67,7 @@ class ProductDetailActivity : BaseActivity() {
     companion object {
         private const val EXTRA_ID = "product_id"
 
-        fun intentFor(context: Context, productId: Int) =
+        fun intentFor(context: Context, productId: String) =
             Intent(context, ProductDetailActivity::class.java).putExtra(EXTRA_ID, productId)
     }
 }

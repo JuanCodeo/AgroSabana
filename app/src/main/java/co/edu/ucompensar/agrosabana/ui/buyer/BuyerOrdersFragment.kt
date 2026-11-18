@@ -4,20 +4,30 @@ import androidx.core.view.isVisible
 import co.edu.ucompensar.agrosabana.R
 import co.edu.ucompensar.agrosabana.data.Order
 import co.edu.ucompensar.agrosabana.data.OrderStatus
+import co.edu.ucompensar.agrosabana.data.Session
 import co.edu.ucompensar.agrosabana.data.Store
-import co.edu.ucompensar.agrosabana.ui.common.BaseActivity
 import co.edu.ucompensar.agrosabana.ui.common.ListFragment
 import co.edu.ucompensar.agrosabana.ui.common.Row
-import co.edu.ucompensar.agrosabana.data.Session
+import co.edu.ucompensar.agrosabana.ui.common.launchTask
 import co.edu.ucompensar.agrosabana.util.Money
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
-/** Historial de compras con cancelacion antes del envio y retracto (RF-PED-02, RF-PAG-05). */
+/**
+ * Historial de compras leido de Firestore (orders where buyerId == uid), con pago pendiente,
+ * cancelacion antes del envio y retracto (RF-PED-02, RF-PAG-05).
+ */
 class BuyerOrdersFragment : ListFragment() {
 
     override val filters = listOf(R.string.tab_in_progress, R.string.tab_delivered, R.string.tab_cancelled)
     override val emptyMessage = R.string.no_orders
+
+    private val inProgress = setOf(
+        OrderStatus.PENDIENTE_PAGO, OrderStatus.PAGADO, OrderStatus.PREPARANDO, OrderStatus.ENVIADO, OrderStatus.DISPUTA
+    )
+    private val closed = setOf(
+        OrderStatus.CANCELADO, OrderStatus.ANULADO, OrderStatus.RETRACTO, OrderStatus.PAGO_RECHAZADO
+    )
 
     override fun configure() {
         binding.banner.isVisible = true
@@ -29,9 +39,9 @@ class BuyerOrdersFragment : ListFragment() {
         return Store.ordersOfBuyer(userId)
             .filter { order ->
                 when (filterIndex) {
-                    0 -> order.status.isOpen || order.status == OrderStatus.DISPUTA
+                    0 -> order.status in inProgress
                     1 -> order.status == OrderStatus.ENTREGADO
-                    else -> order.status == OrderStatus.CANCELADO || order.status == OrderStatus.ANULADO || order.status == OrderStatus.RETRACTO
+                    else -> order.status in closed
                 }
             }
             .map { order ->
@@ -58,6 +68,16 @@ class BuyerOrdersFragment : ListFragment() {
             .setMessage(requireContext().orderSummary(order))
             .setPositiveButton(R.string.close, null)
         when (order.status) {
+            // Pago sin terminar: se puede pagar (o verificar en ePayco) o descartar el pedido.
+            OrderStatus.PENDIENTE_PAGO -> {
+                dialog.setPositiveButton(if (order.payment != null) R.string.verify_payment else R.string.pay_now) { _, _ ->
+                    startActivity(PaymentActivity.intentFor(requireContext(), order.code, order.payment?.reference))
+                }
+                dialog.setNeutralButton(R.string.close, null)
+                dialog.setNegativeButton(R.string.cancel_order) { _, _ ->
+                    update(order, OrderStatus.CANCELADO, R.string.order_cancelled)
+                }
+            }
             OrderStatus.PAGADO, OrderStatus.PREPARANDO ->
                 dialog.setNegativeButton(R.string.cancel_order) { _, _ ->
                     update(order, OrderStatus.CANCELADO, R.string.order_cancelled)
@@ -71,9 +91,9 @@ class BuyerOrdersFragment : ListFragment() {
         dialog.show()
     }
 
-    private fun update(order: Order, status: OrderStatus, message: Int) {
-        order.status = status
-        refresh()
+    /** Cambia el estado en Firestore; el listener del Store redibuja la lista. */
+    private fun update(order: Order, status: OrderStatus, message: Int) = launchTask {
+        Store.setOrderStatus(order, status)
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 }

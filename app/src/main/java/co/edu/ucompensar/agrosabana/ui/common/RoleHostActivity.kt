@@ -2,6 +2,7 @@ package co.edu.ucompensar.agrosabana.ui.common
 
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -9,6 +10,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import co.edu.ucompensar.agrosabana.R
+import co.edu.ucompensar.agrosabana.data.Store
 import co.edu.ucompensar.agrosabana.data.User
 import co.edu.ucompensar.agrosabana.databinding.ActivityRoleHostBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -32,11 +34,13 @@ abstract class RoleHostActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val user = session.currentUser
-        if (user == null) {
-            // El proceso se reinicio y los datos en memoria ya no incluyen esta cuenta.
+        // Si el proceso se reinicio, se restaura la sesion desde el Splash.
+        if (!requireSession()) return
+        val user = session.currentUser!!
+        // Si el administrador suspende o elimina la cuenta, la sesion se cierra al instante.
+        Store.onSessionInvalid = {
+            Toast.makeText(this, R.string.account_blocked, Toast.LENGTH_LONG).show()
             logoutAndExit()
-            return
         }
         binding = ActivityRoleHostBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -1,6 +1,5 @@
 package co.edu.ucompensar.agrosabana.ui.common
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,9 @@ import co.edu.ucompensar.agrosabana.data.Product
 import co.edu.ucompensar.agrosabana.databinding.ItemProductGridBinding
 import co.edu.ucompensar.agrosabana.databinding.ItemRowBinding
 import co.edu.ucompensar.agrosabana.util.Money
+import co.edu.ucompensar.agrosabana.util.ImageCodec
+import coil.dispose
+import coil.load
 
 /** Fila generica reutilizada por pedidos, usuarios y productos de los tres roles. */
 data class Row(
@@ -29,7 +31,7 @@ data class Row(
     val badge: String? = null,
     @ColorRes val badgeColor: Int = R.color.state_ok,
     val trailing: String? = null,
-    val photo: Bitmap? = null
+    val photo: String? = null
 )
 
 class RowAdapter(private val onClick: ((Row) -> Unit)? = null) :
@@ -83,7 +85,7 @@ class ProductGridAdapter(private val onClick: (Product) -> Unit) :
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val product = items[position]
         with(holder.binding) {
-            image.showProductImage(product.photo, product.category.illustration, product.category.background)
+            image.showProductImage(product.photoUrl, product.category.illustration, product.category.background)
             name.text = product.name
             price.text = Money.format(product.priceCents)
             distance.text = Money.distance(product.distanceKm)
@@ -92,19 +94,50 @@ class ProductGridAdapter(private val onClick: (Product) -> Unit) :
     }
 }
 
-/** Muestra la foto real si existe; si no, la ilustracion de la categoria sobre su color. */
-fun ImageView.showProductImage(photo: Bitmap?, @DrawableRes icon: Int, @ColorRes background: Int) {
+/**
+ * Muestra la foto del producto descargada de Firebase Storage (con Coil, que la guarda en cache);
+ * mientras carga, o si no hay foto, muestra la ilustracion de la categoria sobre su color.
+ */
+fun ImageView.showProductImage(photoUrl: String?, @DrawableRes icon: Int, @ColorRes background: Int) {
     ViewCompat.setBackgroundTintList(this, ContextCompat.getColorStateList(context, background))
     if (this.background == null) setBackgroundResource(R.drawable.bg_thumb)
-    if (photo != null) {
-        scaleType = ImageView.ScaleType.CENTER_CROP
-        setPadding(0, 0, 0, 0)
-        setImageBitmap(photo)
-    } else {
+    val inset = (10 * resources.displayMetrics.density).toInt()
+    if (photoUrl.isNullOrBlank()) {
+        dispose()
         scaleType = ImageView.ScaleType.FIT_CENTER
-        val inset = (10 * resources.displayMetrics.density).toInt()
         setPadding(inset, inset, inset, inset)
         setImageResource(icon)
+        return
+    }
+    // Modo beta: la foto viene incrustada en el documento de Firestore.
+    if (ImageCodec.isDataUri(photoUrl)) {
+        dispose()
+        val bitmap = ImageCodec.decode(photoUrl!!)
+        if (bitmap != null) {
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            setPadding(0, 0, 0, 0)
+            setImageBitmap(bitmap)
+        } else {
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            setPadding(inset, inset, inset, inset)
+            setImageResource(icon)
+        }
+        return
+    }
+    load(photoUrl) {
+        crossfade(true)
+        placeholder(icon)
+        error(icon)
+        listener(
+            onStart = {
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                setPadding(inset, inset, inset, inset)
+            },
+            onSuccess = { _, _ ->
+                scaleType = ImageView.ScaleType.CENTER_CROP
+                setPadding(0, 0, 0, 0)
+            }
+        )
     }
 }
 

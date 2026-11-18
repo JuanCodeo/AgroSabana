@@ -66,7 +66,6 @@
     <string name="error_email">Escribe un correo válido.</string>
     <string name="error_password_rule">Mínimo 8 caracteres, con letras y números.</string>
     <string name="error_email_taken">No se pudo crear la cuenta con este correo.</string>
-    <string name="google_backend">El ingreso con Google se conecta en la etapa de backend.</string>
     <string name="demo_title">Cuentas de prueba</string>
     <string name="demo_accounts">comprador@agrosabana.demo\nvendedor@agrosabana.demo\nadmin@agrosabana.demo\nContraseña: Agro2026</string>
 
@@ -163,15 +162,15 @@
 
     <string name="gateway_title">Pasarela de pagos</string>
     <string name="order">Pedido</string>
-    <string name="secure_checkout">Checkout seguro de la pasarela</string>
+    <string name="secure_checkout">Medios aceptados en ePayco</string>
     <string name="pay_card">Tarjeta</string>
     <string name="pay_pse">PSE</string>
     <string name="pay_nequi">Nequi</string>
     <string name="card_outside">Los datos de pago se digitan en la pasarela, fuera de la app.</string>
-    <string name="gateway_notice_title">Pago procesado por la pasarela</string>
-    <string name="gateway_notice_body">La app no almacena datos de tarjeta. En esta versión de frontend el pago es una simulación: no se realiza ningún cobro.</string>
+    <string name="gateway_notice_title">Pago procesado por ePayco</string>
+    <string name="gateway_notice_body">Serás llevado al checkout seguro de ePayco (certificado PCI DSS). La app no ve ni almacena datos de tarjeta; al terminar, AgroSabana verifica la transacción con ePayco antes de confirmar tu pedido.</string>
     <string name="pay_amount">Pagar %1$s</string>
-    <string name="processing">Procesando pago simulado…</string>
+    <string name="processing">Procesando…</string>
 
     <string name="payment_ok">¡Pago aprobado!</string>
     <string name="order_confirmed">Pedido #%1$s confirmado</string>
@@ -297,7 +296,7 @@
     <string name="review_documents">Revisar documentos</string>
     <string name="view_audit">Ver auditoría</string>
     <string name="audit_title">Registro de auditoría</string>
-    <string name="audit_empty">Aún no hay acciones administrativas en esta sesión.</string>
+    <string name="audit_empty">Aún no hay acciones administrativas registradas.</string>
     <string name="search_users">Nombre o correo</string>
     <string name="tab_all">Todos</string>
     <string name="tab_buyers">Compradores</string>
@@ -309,7 +308,7 @@
     <string name="role">Rol</string>
     <string name="user_status">Estado actual: %1$s</string>
     <string name="document_title">Documento RUT</string>
-    <string name="document_body">Visible con URL firmada de 15 minutos en el backend</string>
+    <string name="document_body">Verifica el RUT del vendedor antes de aprobar la cuenta.</string>
     <string name="reason_required">Motivo (obligatorio)</string>
     <string name="approve_seller">Aprobar vendedor</string>
     <string name="reject">Rechazar</string>
@@ -363,4 +362,37 @@
     <string name="order_voided">Pedido anulado.</string>
     <string name="no_sales">No hay compras en esta vista.</string>
     <string name="buyer_total">%1$s · %2$s</string>
+
+
+    <!-- Etapa final: Firebase, ePayco y geolocalizacion -->
+    <string name="status_payment_pending">PAGO PENDIENTE</string>
+    <string name="status_payment_rejected">PAGO RECHAZADO</string>
+    <string name="error_network">No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.</string>
+    <string name="error_permission">No tienes permiso para realizar esta acción.</string>
+    <string name="error_generic">Ocurrió un error inesperado. Inténtalo de nuevo.</string>
+    <string name="account_blocked">Esta cuenta está suspendida o fue eliminada. Comunícate con el administrador.</string>
+    <string name="saving">Guardando…</string>
+    <string name="biometric_enable_title">Confirma tu huella para activarla</string>
+    <string name="biometric_confirm_password">Confirma tu contraseña para activar la huella</string>
+    <string name="biometric_invalidated">Se registró una huella nueva en el teléfono. Ingresa con tu contraseña y vuelve a activar la huella.</string>
+    <string name="location_denied">No se pudo obtener tu ubicación. Activa el GPS y concede el permiso de ubicación.</string>
+    <string name="open_in_maps">Cómo llegar en Google Maps</string>
+    <string name="epayco_not_configured">La pasarela ePayco no está configurada (falta EPAYCO_PUBLIC_KEY en local.properties).</string>
+    <string name="verifying_payment">Verificando el pago con ePayco…</string>
+    <string name="payment_mismatch">La transacción de ePayco no corresponde a este pedido. No se confirmó el pago.</string>
+    <string name="payment_pending">Pago en proceso</string>
+    <string name="payment_rejected">Pago rechazado</string>
+    <string name="payment_reference">Referencia ePayco</string>
+    <string name="payment_detail">Pago: %1$s · Ref. %2$s · %3$s · %4$s</string>
+    <string name="payment_test_mode">Transacción de prueba (sandbox de ePayco).</string>
+    <string name="pay_now">Pagar ahora</string>
+    <string name="verify_payment">Verificar pago</string>
+    <string name="cancel_payment_title">¿Salir de la pasarela?</string>
+    <string name="cancel_payment_body">Si sales ahora, el pedido queda pendiente de pago. Puedes pagarlo después desde Mis compras.</string>
+    <string name="continue_paying">Seguir pagando</string>
+    <string name="cancel_payment">Salir</string>
+    <string name="user_created_email">Usuario creado. Le enviamos un correo para que defina su contraseña.</string>
+    <string name="audit_simple">%1$s: %2$s (%3$s)</string>
+    <string name="audit_action_create">creó la cuenta</string>
+    <string name="audit_action_edit">editó la cuenta</string>
 </resources>

@@ -23,11 +23,14 @@ import co.edu.ucompensar.agrosabana.ui.common.ListFragment
 import co.edu.ucompensar.agrosabana.ui.common.RoleHostActivity
 import co.edu.ucompensar.agrosabana.ui.common.Row
 import co.edu.ucompensar.agrosabana.ui.common.RowAdapter
+import co.edu.ucompensar.agrosabana.ui.common.launchTask
 import co.edu.ucompensar.agrosabana.ui.common.promptText
 import co.edu.ucompensar.agrosabana.util.Money
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+
+private const val CHART_DAYS = 7
 
 class AdminActivity : RoleHostActivity() {
     override val bottomMenu = R.menu.menu_bottom_admin
@@ -61,11 +64,17 @@ class AdminDashboardFragment : Fragment() {
         binding.noticeCard.setOnClickListener {
             (activity as AdminActivity).selectDestination(R.id.nav_users)
         }
+        Store.changes.observe(viewLifecycleOwner) { render() }
     }
 
     override fun onResume() {
         super.onResume()
         (activity as? AdminActivity)?.setScreenTitle(getString(R.string.administration))
+    }
+
+    /** Indicadores globales recalculados con cada cambio en Firestore. */
+    private fun render() {
+        if (_binding == null) return
         val pendingSellers = Store.users.count { it.role == Role.SELLER && it.status == UserStatus.PENDIENTE }
         binding.tile1.label.setText(R.string.users)
         binding.tile1.value.text = Store.users.size.toString()
@@ -77,6 +86,7 @@ class AdminDashboardFragment : Fragment() {
         binding.tile4.value.text = Store.products.count { it.status == ProductStatus.PENDIENTE }.toString()
         binding.noticeCard.isVisible = pendingSellers > 0
         binding.noticeTitle.text = resources.getQuantityString(R.plurals.seller_requests, pendingSellers, pendingSellers)
+        binding.chart.values = Store.dailySales(CHART_DAYS)
     }
 
     private fun showAudit() {
@@ -84,7 +94,7 @@ class AdminDashboardFragment : Fragment() {
             .setTitle(R.string.audit_title)
             .setPositiveButton(R.string.close, null)
         if (Store.auditLog.isEmpty()) builder.setMessage(R.string.audit_empty)
-        else builder.setItems(Store.auditLog.toTypedArray(), null)
+        else builder.setItems(Store.auditLog.map { it.toString() }.toTypedArray(), null)
         builder.show()
     }
 
@@ -119,19 +129,19 @@ class AdminUsersFragment : ListFragment() {
             }
             .map { user ->
                 Row(
-                    id = user.id.toString(),
+                    id = user.id,
                     title = user.name,
                     subtitle = getString(R.string.user_row, Store.maskEmail(user.email), getString(user.role.label)),
                     icon = R.drawable.ic_person,
                     iconBackground = R.color.agro_slate_soft,
                     badge = getString(user.status.label),
                     badgeColor = user.status.color,
-                    photo = user.photo
+                    photo = user.photoUrl
                 )
             }
 
     override fun onRowClick(row: Row) {
-        startActivity(UserFormActivity.intentFor(requireContext(), row.id.toInt()))
+        startActivity(UserFormActivity.intentFor(requireContext(), row.id))
     }
 }
 
@@ -153,19 +163,19 @@ class AdminProductsFragment : ListFragment() {
     override fun rows(filterIndex: Int, query: String): List<Row> =
         Store.products.filter { it.status == statuses[filterIndex] }.map { product ->
             Row(
-                id = product.id.toString(),
+                id = product.id,
                 title = product.name,
                 subtitle = getString(R.string.admin_product_row, product.sellerName, getString(product.category.label)),
                 icon = product.category.illustration,
                 iconBackground = product.category.background,
                 badge = getString(product.status.label),
                 badgeColor = product.status.color,
-                photo = product.photo
+                photo = product.photoUrl
             )
         }
 
     override fun onRowClick(row: Row) {
-        startActivity(ProductReviewActivity.intentFor(requireContext(), row.id.toInt()))
+        startActivity(ProductReviewActivity.intentFor(requireContext(), row.id))
     }
 
     private fun manageCategories() {
@@ -177,11 +187,11 @@ class AdminProductsFragment : ListFragment() {
             .setMultiChoiceItems(names, active) { _, which, checked -> active[which] = checked }
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.save) { _, _ ->
-                Store.inactiveCategories.clear()
-                categories.forEachIndexed { index, category ->
-                    if (!active[index]) Store.inactiveCategories.add(category)
+                val inactive = categories.filterIndexed { index, _ -> !active[index] }.toSet()
+                launchTask {
+                    Store.setInactiveCategories(inactive)
+                    Snackbar.make(binding.root, R.string.categories_hint, Snackbar.LENGTH_LONG).show()
                 }
-                Snackbar.make(binding.root, R.string.categories_hint, Snackbar.LENGTH_LONG).show()
             }
             .show()
     }
@@ -220,15 +230,16 @@ class SalesReportFragment : Fragment() {
             refresh()
         }
         binding.exportButton.setOnClickListener { export() }
+        Store.changes.observe(viewLifecycleOwner) { refresh() }
     }
 
     override fun onResume() {
         super.onResume()
         (activity as? AdminActivity)?.setScreenTitle(getString(R.string.sales_report))
-        refresh()
     }
 
     private fun refresh() {
+        if (_binding == null) return
         binding.tile1.label.setText(R.string.total_sales)
         binding.tile1.value.text = Money.format(Store.salesTotalCents)
         binding.tile2.label.setText(R.string.sales_count)
@@ -240,7 +251,7 @@ class SalesReportFragment : Fragment() {
 
         sellersAdapter.submitList(Store.topSellers().map { (seller, cents) ->
             Row(
-                id = seller.id.toString(),
+                id = seller.id,
                 title = seller.name,
                 subtitle = seller.municipality,
                 icon = R.drawable.ic_person,
@@ -249,7 +260,7 @@ class SalesReportFragment : Fragment() {
             )
         })
 
-        val orders = Store.orders.filter {
+        val orders = Store.orders.filter { it.status != OrderStatus.PENDIENTE_PAGO }.filter {
             when (filter) {
                 1 -> it.status == OrderStatus.PAGADO
                 2 -> it.status == OrderStatus.DISPUTA
@@ -274,19 +285,20 @@ class SalesReportFragment : Fragment() {
     private fun confirmVoid(order: Order) {
         if (order.status == OrderStatus.ANULADO) return
         requireContext().promptText(R.string.void_order, R.string.void_hint, R.string.void_order) { reason ->
-            order.status = OrderStatus.ANULADO
             val admin = Session(requireContext()).currentUser?.name.orEmpty()
-            Store.audit(admin, getString(R.string.audit_user, getString(R.string.audit_action_void), order.code, reason))
-            refresh()
-            Snackbar.make(binding.root, R.string.order_voided, Snackbar.LENGTH_LONG).show()
+            launchTask {
+                Store.setOrderStatus(order, OrderStatus.ANULADO)
+                Store.audit(admin, getString(R.string.audit_user, getString(R.string.audit_action_void), order.code, reason))
+                Snackbar.make(binding.root, R.string.order_voided, Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 
     private fun export() {
         val csv = buildString {
-            appendLine("pedido,comprador,fecha,estado,total_cop")
+            appendLine("pedido,comprador,fecha,estado,total_cop,referencia_epayco")
             Store.orders.forEach {
-                appendLine("${it.code},${it.buyerName},${it.date},${getString(it.status.label)},${it.totalCents / 100}")
+                appendLine("${it.code},${it.buyerName},${it.date},${getString(it.status.label)},${it.totalCents / 100},${it.payment?.reference.orEmpty()}")
             }
         }
         val share = Intent(Intent.ACTION_SEND)

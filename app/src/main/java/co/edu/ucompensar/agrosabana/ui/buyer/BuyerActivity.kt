@@ -26,17 +26,15 @@ class BuyerActivity : RoleHostActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isReady) openRequestedDestination(intent)
+        if (!isReady) return
+        // El contador del carrito se actualiza con cada cambio del carrito en Firestore.
+        Store.changes.observe(this) { refreshCartBadge() }
+        openRequestedDestination(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         openRequestedDestination(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isReady) refreshCartBadge()
     }
 
     private fun openRequestedDestination(intent: Intent) {
