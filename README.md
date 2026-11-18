@@ -1,13 +1,33 @@
 # AgroSabana
 
-Frontend de una tienda virtual nativa para Android que conecta a pequeños productores de la Sabana de Occidente con compradores cercanos. Proyecto de la asignatura Desarrollo de Aplicaciones Móviles, Fundación Universitaria Compensar.
+Tienda virtual nativa para Android que conecta a pequeños productores de la Sabana de Occidente con compradores cercanos. Proyecto de la asignatura Desarrollo de Aplicaciones Móviles, Fundación Universitaria Compensar.
 
-**Alcance de esta entrega:** solo interfaz. Los datos viven en memoria (`data/Store.kt`) para que todos los CRUD se puedan recorrer sin servidor, y vuelven al estado inicial al cerrar la app. Los pagos son simulados: no se hace ningún cobro ni se piden datos de tarjeta.
+**Versión 2.0 (beta funcional):** autenticación, base de datos y lógica conectadas a Firebase; huella dactilar con llave del Android Keystore; geolocalización con Google Play Services; pasarela de pagos ePayco.
 
-| | | | |
-|---|---|---|---|
-| ![Login](docs/capturas/login.png) | ![Inicio](docs/capturas/inicio.png) | ![Carrito](docs/capturas/carrito.png) | ![Pasarela](docs/capturas/pasarela.png) |
-| ![Productos del vendedor](docs/capturas/vendedor_productos.png) | ![Pedido](docs/capturas/vendedor_pedido.png) | ![Usuarios](docs/capturas/admin_usuarios.png) | ![Reporte de ventas](docs/capturas/admin_ventas.png) |
+| | | |
+|---|---|---|
+| ![Inicio](docs/capturas_final/01_comprador_inicio.png) | ![Carrito](docs/capturas_final/02_comprador_carrito.png) | ![Ubicación](docs/capturas_final/03_comprador_ubicacion.png) |
+| ![Panel vendedor](docs/capturas_final/05_vendedor_panel.png) | ![Pedido](docs/capturas_final/07_vendedor_pedido.png) | ![Panel admin](docs/capturas_final/08_admin_panel.png) |
+
+## Funcionalidades
+
+| Componente | Implementación |
+|---|---|
+| Autenticación (3 roles) | Firebase Authentication: registro, inicio y cierre de sesión, recuperación de contraseña por correo |
+| Huella dactilar | `BiometricPrompt` (BIOMETRIC_STRONG) + llave AES del Android Keystore que cifra las credenciales |
+| CRUD de usuarios | Administrador: crear (cuenta real en Auth), editar, aprobar, suspender y eliminar, con auditoría |
+| CRUD de productos | Foto con cámara o galería; moderación por el administrador |
+| Carrito y órdenes | Carrito persistente en Firestore; pedidos con historial y máquina de estados |
+| Geolocalización | `FusedLocationProviderClient` + `Geocoder`; distancia comprador–productor (Haversine) |
+| Pasarela de pagos | Checkout de ePayco en WebView y validación de la transacción por referencia |
+
+## Arquitectura
+
+- `data/Store.kt`: caché reactiva alimentada por *listeners* de Firestore según el rol; las pantallas observan `Store.changes` (LiveData) y escriben con funciones `suspend`.
+- `data/AuthRepository.kt`, `data/EpaycoGateway.kt`, `data/FirestoreMapper.kt`, `util/LocationHelper.kt`, `ui/common/Biometrics.kt`.
+- Reglas de seguridad versionadas en [`firebase/firestore.rules`](firebase/firestore.rules) y [`firebase/storage.rules`](firebase/storage.rules).
+
+El detalle está en el [documento técnico definitivo](docs/Documento_Tecnico_Definitivo_AgroSabana.pdf).
 
 ## Cuentas de prueba
 
@@ -19,42 +39,7 @@ Contraseña de todas: `Agro2026`
 | Vendedor | `vendedor@agrosabana.demo` |
 | Administrador | `admin@agrosabana.demo` |
 
-Son datos ficticios incluidos en el código solo para la demostración.
-
-## Pantallas por rol
-
-| Rol | Pantalla | Clase | Layout |
-|---|---|---|---|
-| Todos | Splash | `ui/auth/SplashActivity` | `activity_splash` |
-| Todos | Inicio de sesión y huella | `ui/auth/LoginActivity` | `activity_login` |
-| Todos | Registro con rol | `ui/auth/RegisterActivity` | `activity_register` |
-| Todos | Recuperar contraseña | `ui/auth/RecoverPasswordActivity` | `activity_recover` |
-| Todos | Drawer y Bottom Navigation | `ui/common/RoleHostActivity` | `activity_role_host`, `menu/` |
-| Comprador | Inicio | `BuyerHomeFragment` | `fragment_buyer_home` |
-| Comprador | Catálogo | `CatalogFragment` | `fragment_catalog` |
-| Comprador | Detalle de producto | `ProductDetailActivity` | `activity_product_detail` |
-| Comprador | Carrito | `CartFragment` | `fragment_cart`, `item_cart` |
-| Comprador | Entrega y resumen | `CheckoutActivity` | `activity_checkout` |
-| Comprador | Pasarela de pagos | `PaymentActivity` | `activity_payment` |
-| Comprador | Confirmación | `PaymentResultActivity` | `activity_payment_result` |
-| Comprador | Historial de compras | `BuyerOrdersFragment` | `fragment_list` |
-| Comprador | Perfil y edición | `ProfileFragment`, `EditProfileActivity` | `fragment_profile`, `activity_edit_profile` |
-| Vendedor | Panel | `SellerDashboardFragment` | `fragment_dashboard` |
-| Vendedor | Productos (CRUD) | `SellerProductsFragment`, `ProductFormActivity` | `fragment_list`, `activity_product_form` |
-| Vendedor | Pedidos recibidos | `SellerOrdersFragment`, `SellerOrderDetailActivity` | `fragment_list`, `activity_seller_order_detail` |
-| Vendedor | Perfil de vendedor | `SellerProfileFragment` | `fragment_seller_profile` |
-| Administrador | Dashboard | `AdminDashboardFragment` | `fragment_dashboard` |
-| Administrador | Usuarios (CRUD) | `AdminUsersFragment`, `UserFormActivity` | `fragment_list`, `activity_user_form` |
-| Administrador | Productos | `AdminProductsFragment`, `ProductReviewActivity` | `fragment_list`, `activity_product_review` |
-| Administrador | Reporte de ventas | `SalesReportFragment` | `fragment_sales_report` |
-
-## Recursos
-
-- `res/values/colors.xml` y `values-night/colors.xml`: paleta propia (verde `#2E7D32`, ámbar `#F9A825`, gris azulado `#37474F`) con tema claro y oscuro.
-- `res/values/themes.xml`: `Theme.AgroSabana` y `Theme.AgroSabana.Admin`, que distingue con color al rol con privilegios.
-- `res/values/styles.xml`: estilos propios de botones, campos, tarjetas, chips y tipografía.
-- `res/values/strings.xml` y `dimens.xml`: textos en es-CO, plurales y medidas, incluida el área táctil mínima de 48 dp.
-- `res/drawable/`: logo, iconos e ilustraciones vectoriales, formas (`shape`), degradado y `layer-list`.
+Los datos de demostración se cargan con `node firebase/seed/seed.mjs app/google-services.json`.
 
 ## Compilar
 
@@ -64,8 +49,18 @@ Requiere JDK 17 y Android SDK 36, o abrir la carpeta en Android Studio.
 gradlew assembleDebug
 ```
 
-El APK queda en `app/build/outputs/apk/debug/app-debug.apk`. Es compatible desde Android 8.0 (API 26).
+El APK queda en `app/build/outputs/apk/debug/app-debug.apk`; compatible desde Android 8.0 (API 26).
+
+Configuración opcional en `local.properties` (no se sube al repositorio):
+
+| Clave | Uso |
+|---|---|
+| `EPAYCO_PUBLIC_KEY` | Llave pública de ePayco (sandbox) |
+| `EPAYCO_TEST` | `true` por defecto |
+| `MAPS_API_KEY` | Mapa del Maps SDK en modo lite |
+| `USE_FIREBASE_STORAGE` | `true` sube las fotos a Firebase Storage (requiere plan Blaze); por defecto se guardan comprimidas en Firestore |
 
 ## Documentación
 
-- [`docs/Anexo_Actualizacion_Documento_Tecnico.pdf`](docs/Anexo_Actualizacion_Documento_Tecnico.pdf): cambios del documento técnico para que coincida con lo implementado y lista de lo simulado o pendiente para el backend.
+- [`docs/Documento_Tecnico_Definitivo_AgroSabana.pdf`](docs/Documento_Tecnico_Definitivo_AgroSabana.pdf): documento técnico de la entrega final.
+- [`docs/Anexo_Actualizacion_Documento_Tecnico.pdf`](docs/Anexo_Actualizacion_Documento_Tecnico.pdf): anexo de la entrega de frontend.
