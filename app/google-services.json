@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "728939578792",
+    "project_id": "agrosabana",
+    "storage_bucket": "agrosabana.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728939578792:android:7a400aa639f3dc5070499d",
+        "android_client_info": {
+          "package_name": "co.edu.ucompensar.agrosabana"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMEIL1rXJgsF9EOuorvXM0fOmsMhlIgm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

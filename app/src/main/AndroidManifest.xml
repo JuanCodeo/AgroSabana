@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Firebase, ePayco y Google Maps -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Huella dactilar (BiometricPrompt) -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <!-- Ubicacion para la direccion de entrega; se pide en tiempo de ejecucion -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+
+    <!-- Para que la app pueda abrir Google Maps con la ruta de entrega (Android 11+) -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="false"
@@ -11,6 +30,18 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AgroSabana">
+
+        <!-- Llave de Google Maps SDK leida de local.properties (MAPS_API_KEY) -->
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="${mapsApiKey}" />
+
+        <!-- Comparte con la app de camara el archivo temporal de la foto -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name=".ui.auth.SplashActivity"
@@ -30,6 +61,7 @@
         <activity android:name=".ui.buyer.ProductDetailActivity" />
         <activity android:name=".ui.buyer.CheckoutActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.buyer.PaymentActivity" />
+        <activity android:name=".ui.buyer.EpaycoCheckoutActivity" android:configChanges="orientation|screenSize" />
         <activity android:name=".ui.buyer.PaymentResultActivity" />
         <activity android:name=".ui.common.EditProfileActivity" android:windowSoftInputMode="adjustResize" />
 
